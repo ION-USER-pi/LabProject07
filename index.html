@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>labproject07</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: linear-gradient(135deg, #0a192f, #112240);
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #64ffda;
+        }
+
+        .calculator-container {
+            background: rgba(17, 34, 64, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            transition: all 0.3s ease;
+            border: 2px solid #64ffda;
+        }
+
+        #calculatorInput {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: transparent;
+            border: 2px solid #64ffda;
+            color: #64ffda;
+            font-size: 24px;
+            text-align: right;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .btn {
+            background: #112240;
+            border: 1px solid #64ffda;
+            color: #64ffda;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 18px;
+        }
+
+        .btn:hover {
+            background: #64ffda;
+            color: #0a192f;
+            transform: scale(1.05);
+        }
+
+        .btn-special {
+            background: #1d2d50;
+        }
+
+        @media (max-width: 480px) {
+            .calculator-container {
+                width: 95%;
+                padding: 15px;
+            }
+            
+            #calculatorInput {
+                font-size: 18px;
+            }
+
+            .btn {
+                padding: 10px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <input type="text" id="calculatorInput" placeholder="Enter expression" readonly>
+        <div class="btn-grid">
+            <button class="btn" data-value="7">7</button>
+            <button class="btn" data-value="8">8</button>
+            <button class="btn" data-value="9">9</button>
+            <button class="btn btn-special" data-value="/">/</button>
+            
+            <button class="btn" data-value="4">4</button>
+            <button class="btn" data-value="5">5</button>
+            <button class="btn" data-value="6">6</button>
+            <button class="btn btn-special" data-value="*">*</button>
+            
+            <button class="btn" data-value="1">1</button>
+            <button class="btn" data-value="2">2</button>
+            <button class="btn" data-value="3">3</button>
+            <button class="btn btn-special" data-value="-">-</button>
+            
+            <button class="btn" data-value="0">0</button>
+            <button class="btn" data-value=".">.</button>
+            <button class="btn btn-special" id="clearBtn">C</button>
+            <button class="btn btn-special" data-value="+">+</button>
+            
+            <button class="btn" id="equalBtn" style="grid-column: span 4;">=</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const $input = $('#calculatorInput');
+
+            $('.btn').not('#clearBtn, #equalBtn').click(function() {
+                $input.val($input.val() + $(this).data('value'));
+            });
+
+            $('#clearBtn').click(function() {
+                $input.val('');
+            });
+
+            $('#equalBtn').click(function() {
+                try {
+                    const result = eval($input.val());
+                    $input.val(result);
+                } catch(error) {
+                    $input.val('Error');
+                }
+            });
+
+            // Keyboard support
+            $(document).keydown(function(e) {
+                const key = e.key;
+                const validKeys = ['0','1','2','3','4','5','6','7','8','9','+','-','*','/','.',
+                'Backspace','Enter','Escape'];
+                
+                if (validKeys.includes(key)) {
+                    e.preventDefault();
+                    
+                    switch(key) {
+                        case 'Enter':
+                            $('#equalBtn').click();
+                            break;
+                        case 'Backspace':
+                            $input.val($input.val().slice(0, -1));
+                            break;
+                        case 'Escape':
+                            $input.val('');
+                            break;
+                        default:
+                            $input.val($input.val() + key);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
